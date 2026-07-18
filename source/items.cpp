@@ -768,8 +768,7 @@ bool ItemDatabase::loadFromGameXml(const FileName &identifier, wxString &error, 
 
 		for (auto id = fromId; id <= toId; ++id) {
 			if (!loadItemFromGameXml(itemNode, id)) {
-				error = wxString::Format("Could not load item id %d. Item id not found.", id);
-				return false;
+				warnings.push_back(wxString::Format("Could not load item id %d, skipped (no matching sprite/appearance).", id));
 			}
 		}
 	}

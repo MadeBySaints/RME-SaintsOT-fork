@@ -304,7 +304,16 @@ static std::string extractTopFolder(const wxString &filePath, const wxString &di
 	wxFileName fn(filePath);
 	wxString relPath = fn.GetPath().Lower();
 	wxString dirLower = directory.Lower();
-	if (!relPath.StartsWith(dirLower)) {
+
+	// Normalize separators before comparing: filePath uses the OS-native
+	// separator (backslash on Windows) but a configured directory may use
+	// forward slashes, which would otherwise make StartsWith fail for every
+	// file and leave every monster's folder empty.
+	wxString relPathNormalized = relPath;
+	relPathNormalized.Replace("\\", "/");
+	wxString dirLowerNormalized = dirLower;
+	dirLowerNormalized.Replace("\\", "/");
+	if (!relPathNormalized.StartsWith(dirLowerNormalized)) {
 		return "";
 	}
 	relPath = relPath.Mid(dirLower.Length());
